@@ -5,6 +5,11 @@ Calcite
 Junjiang Xiao; Hengde Dai  
 #### Project Name
 Study of Neural Network Parameter Diffusion based on image classification
+#### Specific examples and Goal
+We will leverage existing public image datasets (such as CIFAR-10 for small-scale experiments and ImageNet for large-scale training) to train a cohort of high-performance CNNs, including architectures like ResNet and EfficientNet . These models are selected for their balanced trade-offs between low parameter counts , reduced computational footprints , and high accuracy. These qualities are critical for efficient downstream tasks. The parameters of these pre-trained networks will be aggregated into a structured dataset, serving as the foundation for training a Neural Network Parameter Diffusion Model (p-diff).
+
+To validate our approach, we will conduct a comprehensive benchmark to evaluate the performance of the neural networks synthesized by P-Diff (Neural Network Parameter Diffusion) against traditionally trained models. This evaluation will be carried out across multiple key dimensions, including accuracy, generalization, and computational efficiency. Specifically, we will assess model accuracy using Top-1 and Top-5 accuracy on validation sets such as ImageNet-1K, as well as F1 scores for imbalanced classification tasks. To examine generalization capability, we will perform cross-dataset testing, evaluating models trained on CIFAR-10 against corruption benchmarks like CIFAR-100-C. Additionally, we will analyze computational efficiency by comparing FLOPs, inference latency, and memory footprint, ensuring that the synthesized models not only achieve high performance but also maintain efficiency in real-world deployment.
+
 #### Project Abstract
 Diffusion models have recently achieved significant breakthroughs in generative artificial intelligence, excelling at generating high-quality images, audio, and text. However, their capabilities extend beyond content generation. This project explores a novel research direction—leveraging diffusion models to directly generate neural network parameters, reducing reliance on traditional gradient-based optimization and enhancing training efficiency.
 
