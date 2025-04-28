@@ -1,17 +1,111 @@
-# cse498repo
-### Team Name
-Calcite  
-### Team Members
-Junjiang Xiao; Hengde Dai  
-### Project Name
-Study of Neural Network Parameter Diffusion based on image classification
-### Project Abstract
-Diffusion models have recently achieved significant breakthroughs in generative artificial intelligence, excelling at generating high-quality images, audio, and text. However, their capabilities extend beyond content generation. This project explores a novel research direction—leveraging diffusion models to directly generate neural network parameters, reducing reliance on traditional gradient-based optimization and enhancing training efficiency.
+# Deep Generative CNN Classifiers with Latent Diffusion
 
-Our project is to study the P-Diff (Neural Network Parameter Diffusion), a framework that treats high-performance neural network parameters as structured data. The key idea is to train a diffusion model to learn the distribution of these parameters in a latent noise space, enabling the direct synthesis of optimized network parameters. First, we collect parameters from multiple pre-trained high-performance neural networks (e.g., ResNet, ViT) and compress them using an autoencoder to obtain low-dimensional latent representations. Next, we train a diffusion model in this latent space to iteratively refine noise into structured parameters. Finally, a decoder reconstructs the generated latent vectors into deployable neural network parameters, enabling an end-to-end process from noise to optimized networks.
+This project implements a complete pipeline for generating new CNN classifiers by learning a latent space of network parameters using an autoencoder and a latent diffusion model. The models are trained on the MNIST dataset.
 
-To validate P-Diff, we will conduct extensive experiments on public datasets such as CIFAR-10 and ImageNet. We will train CNN architectures like ResNet and EfficientNet and evaluate the performance of networks synthesized by P-Diff. Our benchmark will measure accuracy (Top-1/Top-5 accuracy, F1 score), generalization (cross-dataset testing), and computational efficiency (FLOPs, inference latency, memory footprint), comparing P-Diff-generated models against traditionally trained ones. Our goal is to explore the potential of diffusion models in neural network parameter generation and establish a new paradigm for neural network optimization.
-### Specific examples and Goal
-We will leverage existing public image datasets (such as CIFAR-10 for small-scale experiments and ImageNet for large-scale training) to train a cohort of high-performance CNNs, including architectures like ResNet and EfficientNet . These models are selected for their balanced trade-offs between low parameter counts , reduced computational footprints , and high accuracy. These qualities are critical for efficient downstream tasks. The parameters of these pre-trained networks will be aggregated into a structured dataset, serving as the foundation for training a Neural Network Parameter Diffusion Model (p-diff).
+## Project Overview
 
-To validate our approach, we will conduct a comprehensive benchmark to evaluate the performance of the neural networks synthesized by P-Diff (Neural Network Parameter Diffusion) against traditionally trained models. This evaluation will be carried out across multiple key dimensions, including accuracy, generalization, and computational efficiency. Specifically, we will assess model accuracy using Top-1 and Top-5 accuracy on validation sets such as ImageNet-1K, as well as F1 scores for imbalanced classification tasks. To examine generalization capability, we will perform cross-dataset testing, evaluating models trained on CIFAR-10 against corruption benchmarks like CIFAR-100-C. Additionally, we will analyze computational efficiency by comparing FLOPs, inference latency, and memory footprint, ensuring that the synthesized models not only achieve high performance but also maintain efficiency in real-world deployment.
+1. **Train multiple CNN classifiers** to collect parameter datasets.
+2. **Train a Parameter Autoencoder** to encode high-dimensional CNN parameters into a compact latent space.
+3. **Train a Latent Diffusion Model** on the latent space to model the parameter distribution.
+4. **Sample new CNN parameters** using DDIM-based sampling from the diffusion model.
+5. **Evaluate** the generated CNN classifiers on MNIST test set.
+6. **Visualize and Save** training losses and accuracies for each stage.
+
+---
+
+## Project Structure
+
+- `CNNClassifier`: Basic convolutional neural network for MNIST classification.
+- `ParameterAutoencoder`: Autoencoder that compresses flattened CNN parameters.
+- `LatentDiffusion`: Diffusion model that operates on the latent space learned by the autoencoder.
+- `update_ema()`: Exponential Moving Average update for stabilizing diffusion model during training.
+- `main()`: The complete training, sampling, evaluation, and visualization pipeline.
+
+---
+
+## Dependencies
+
+Install required libraries:
+
+```bash
+pip install torch torchvision matplotlib pandas tqdm
+```
+
+---
+
+## How to Run
+
+Simply execute the main script:
+
+```bash
+python main.py
+```
+
+The code will:
+- Train 10 CNNs on MNIST for 10 epochs each.
+- Train an autoencoder on the collected CNN parameters.
+- Train a diffusion model for 20,000 steps.
+- Generate 20 new CNN models.
+- Test and report accuracy of generated models.
+- Plot and save:
+  - CNN training loss curve
+  - Autoencoder training loss curve
+  - Diffusion training loss curve
+  - Generated CNN accuracy scatter plot
+- Save:
+  - `training_curves_TIMESTAMP.png`
+  - `training_metrics_TIMESTAMP.csv`
+
+Both files are stored in `output/plots/`.
+
+---
+
+## Visualized Outputs
+
+- **CNN Training Loss Curve**: Monitors CNN training process.
+- **Autoencoder Loss Curve**: Tracks parameter reconstruction ability.
+- **Diffusion Loss Curve**: Shows how well the diffusion model fits the latent distribution.
+- **Generated CNN Test Accuracies**: Shows the performance of generated CNN models.
+
+Example output files:
+```
+output/plots/
+    training_curves_20250101_0000.png
+    training_metrics_20250101_0000.csv
+```
+
+---
+
+## Key Parameters (Default Settings)
+
+| Parameter | Value |
+|:---|:---|
+| Number of CNNs | 10 |
+| CNN Epochs | 10 |
+| Autoencoder Latent Dim | 512 |
+| Autoencoder Hidden Dim | 1024 |
+| Autoencoder Epochs | 100 |
+| Diffusion Timesteps | 500 |
+| Diffusion Training Steps | 20,000 |
+| Generated CNNs | 20 |
+| Diffusion Sampling Steps (DDIM) | 50 |
+
+---
+
+## Notes
+
+- **Losses and accuracies are automatically logged and visualized**.
+- **Generated CNN models are fully functional** and tested on MNIST.
+- **All outputs are timestamped**, ensuring experiments are well organized.
+
+---
+
+## Future Work (Optional Extensions)
+
+- Apply to larger datasets (e.g., CIFAR-10, CIFAR-100).
+- Introduce Classifier-Free Guidance for conditional generation.
+- Improve sampling with DPM-Solver or EDM.
+- Fine-tune generated CNNs for higher accuracy.
+- Ensemble multiple generated CNNs for better stability.
+
+---
